@@ -15,6 +15,14 @@ import java.util.stream.IntStream;
  */
 public class Interval {
 	
+	// representation invariants a.k.a. private invariants
+	/**
+	 * @invar The width is nonnegative.
+	 *     | 0 <= width
+	 */
+	private int width;
+	private int upperBound;
+	
 	// getters or inspector methods --- defines the class's abstract state space = set of possible abstract values/states
 	// immutable class -> the abstract value of an instance
 	// mutable class -> the current abstract state of an instance
@@ -22,26 +30,39 @@ public class Interval {
 	/**
 	 * @basic
 	 */
-	public int getLowerBound() { throw new RuntimeException("Not yet implemented"); }
+	public int getLowerBound() {
+		return upperBound - width;
+	}
 	
 	/**
 	 * @basic
 	 */
-	public int getUpperBound() { throw new RuntimeException("Not yet implemented"); }
+	public int getUpperBound() {
+		return upperBound;
+	}
 	
 	/**
 	 * @post The result equals the upper bound minus the lower bound.
 	 *     | result == getUpperBound() - getLowerBound()
 	 */
-	public int getWidth() { throw new RuntimeException("Not yet implemented"); }
+	public int getWidth() {
+		return width;
+	}
 	
 	/**
 	 * @post The result is not null
-	 *     | getElements() != null
+	 *     | result != null
 	 * @post The sequence of elements equals the sequence starting at the lower bound (inclusive) and ending at the upper bound (inclusive).
-     *     | Arrays.equals(getElements(), IntStream.range(getLowerBound(), getUpperBound() + 1).toArray())
+     *     | Arrays.equals(result, IntStream.range(getLowerBound(), getUpperBound() + 1).toArray())
 	 */
-	public int[] getElements() { throw new RuntimeException("Not yet implemented"); }
+	public int[] getElements() {
+		int[] result = new int[width + 1];
+		for (int i = 0; i < width + 1; i++)
+			result[i] = upperBound - width + i;
+		return result;
+		
+		//return IntStream.range(upperBound - width, upperBound + 1).toArray();
+	}
 
 	/**
 	 * Initializes this object so that it represents the interval
@@ -54,7 +75,10 @@ public class Interval {
 	 * @post This interval's upper bound equals the given upper bound.
 	 *     | getUpperBound() == upperBound
 	 */
-	public Interval(int lowerBound, int upperBound) { throw new RuntimeException("Not yet implemented"); }
+	public Interval(int lowerBound, int upperBound) {
+		this.width = upperBound - lowerBound;
+		this.upperBound = upperBound;
+	}
 	
 	// no mutators --- no methods that change the object's abstract state
 	
